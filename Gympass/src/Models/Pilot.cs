@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Models
 {
@@ -15,26 +16,29 @@ namespace Models
             this.name = name;
         }
 
-        public int GetId{
+        //Id do piloto
+        public int GetId {
             get{
                 return id;
             }
         }
 
-        public string GetName{
+        //Nome do piloto
+        public string GetName {
             get{
                 return name;
             }
         }
 
-        public void SetNewLap(Lap newLap)
-        {
+        //Adiciona uma volta nova
+        public void SetNewLap(Lap newLap) {
             if(laps == null)
                 laps = new List<Lap>();
 
             laps.Add(newLap);
         }
 
+        //Retorna a quantidade de voltas
         public int GetTotalLaps{
             get
             {
@@ -42,6 +46,7 @@ namespace Models
             }
         }
 
+        //Realiza a soma dos tempos de todas as voltas
         public TimeSpan GetTotalTime
         {
             get{
@@ -58,6 +63,36 @@ namespace Models
                     sumTotalTime += l.LapTotalTime;
                 }
                 return sumTotalTime;
+            }
+        }
+
+        //Retorna a melhor volta
+        public int GetBestLap{
+            get{
+                return laps.OrderBy(l => l.LapTotalTime).First().LapID;
+            }
+        }
+
+        //Retorna o tempo da melhor volta
+        public TimeSpan GetBestLapTime{
+            get{
+                return laps.OrderBy(l => l.LapTotalTime).First().LapTotalTime;
+            }
+        }
+
+        //Retorna a velocidade media da corrida
+        public float GetAverageVelocity
+        {
+            get{
+                return laps.Sum(s => s.LapAverageVelocity) / laps.Count;
+            }
+        }
+
+        //referencia das voltas
+        public List<Lap> GetLaps
+        {
+            get{
+                return laps;
             }
         }
     }

@@ -12,31 +12,35 @@ namespace Models
         {
             this.lapID = id;
 
-            TimeSpan.TryParse(timeStarted, out this.lapTimeStarted);
-            TimeSpan.TryParse(timeTotal, out this.lapTimeTotal);
+            TimeSpan.TryParse(timeStarted, out this.lapTimeStarted); //Converte a string Hora em um TimeSpan
+            TimeSpan.TryParse(timeTotal, out this.lapTimeTotal); //Converte a string Tempo volta em um TimeSpan
 
             this.lapSpeed = averageSpeed;
         }
 
+        //ID indicando qual o numero da volta
         public int LapID{
             get{
                 return lapID;
             }
         }
 
+        //Tempo que essa volta foi inicializada
         public TimeSpan LapInitialTime{
             get{
                 return lapTimeStarted;
             }
         }
 
+        //Tempo da duracao total da volta
         public TimeSpan LapTotalTime{
             get{
                 return lapTimeTotal;
             }
         }
 
-        public float LapAverageSpeed{
+        //Velocidade media da volta
+        public float LapAverageVelocity{
             get{
                 return lapSpeed;
             }

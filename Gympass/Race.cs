@@ -13,48 +13,47 @@ namespace Gympass
         static void Main(string[] args)
         {
             List<string> raceData = RaceDataReader.OnReadRaceLog(@"data/log.txt");
-            Dictionary<int, Pilot> pilots = new Dictionary<int, Pilot>();
 
-            foreach(string line in raceData)
+            if(raceData.Count == 0)
             {
-                string[] lineData = RaceDataReader.ClearLine(line);
-                Pilot newPilot = RaceDataReader.GetPilot(lineData);
-
-                if(pilots.ContainsKey(newPilot.GetId))
-                {
-                    pilots[newPilot.GetId].SetNewLap(RaceDataReader.GetLap(lineData));
-                }
-                else
-                {
-                    newPilot.SetNewLap(RaceDataReader.GetLap(lineData));
-                    pilots.Add(newPilot.GetId, newPilot);
-                }
+                Console.WriteLine("Não foi possível carregar o log");
+                return;
             }
             
-            results = pilots.Values.ToList().OrderBy(t => t.GetTotalTime).ToList();
+            //Ordena os pilotos pelo menor tempo, decidindo assim a posicao no podio
+            results = RaceDataReader.GenerateRacePilots(raceData).Values.ToList().OrderBy(t => t.GetTotalTime).ToList();
 
-            ShowRaceResult();
+            ShowRaceResult(); //Exibe os resultados
         }
 
         static void ShowRaceResult()
         {
             Console.WriteLine("####################################\n"+
-            "###### Teste BackEnd GymPass #######\n"+
+            "###### Teste Back-End GymPass #######\n"+
             "####################################\n"+
             "###### Felipe Nicolau Moreti #######\n"+
             "#### felipe.moreti7@gmail.com ######\n"+
             "######### (11)98030-4601 ###########\n"+
             "####################################\n"+
             "####################################\n"+
-            "########## RACE RESULTS ############\n"+
-            "Posição		código		Nome			Voltas		Tempo Total");
+            "########## RACE RESULTS ############\n\n"+
+            "Posição\tcódigo\t\tNome\t\tVoltas\t\tTempo Total\t\t\tBest Lap - Best Lap Time\t\tAverage Velocity\t\ttempo atrás");
 
             for(int i = 0; i < results.Count; i++)
             {
                 Pilot p = results[i];
-                Console.WriteLine(string.Format("{0}\t\t{1}\t\t{2}\t\t\t{3}\t\t{4}", 
-                i+1, p.GetId, p.GetName, p.GetTotalLaps, p.GetTotalTime));
+
+                Lap winnerLastLap = results[0].GetLaps[results[0].GetLaps.Count-1];
+                Lap lastLap = p.GetLaps[p.GetLaps.Count-1];
+                TimeSpan timeAfterFirst = (lastLap.LapInitialTime + lastLap.LapTotalTime) - (winnerLastLap.LapInitialTime + winnerLastLap.LapTotalTime);
+
+                Console.WriteLine(string.Format("{0}\t{1}\t\t{2}\t\t{3}\t\t{4}\t\t{5} - {6}\t\t{7}\t\t+{8}", 
+                i+1, p.GetId, p.GetName, p.GetTotalLaps, p.GetTotalTime, p.GetBestLap, p.GetBestLapTime, p.GetAverageVelocity, timeAfterFirst));
             }
+
+            Console.WriteLine("\n#### Best Lap of the race ####\n");
+            Pilot faster = results.OrderBy(p => p.GetBestLapTime).First();
+            Console.WriteLine(string.Format("{0} - {1}\n", faster.GetName, faster.GetBestLapTime));
         }
     }
 }
