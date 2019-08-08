@@ -1,6 +1,6 @@
 Código desenvolvido utilizando VSCode.
 
-Para compilar instalar as bibliotecas .net e executar os comandos .net restore e .net run
+Para compilar instalar as bibliotecas .net e executar os comandos ".net restore" e ".net run"
 
 O Arquivo main é o Race.cs que está na raiz da pasta Gympass contida nesse repositório, dentro da pasta "data" está o log.txt que contém os dados da corrida.
 
